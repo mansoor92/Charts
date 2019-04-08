@@ -129,6 +129,7 @@ class LineChart1ViewController: DemoBaseViewController {
 //        set1.drawCircleHoleEnabled = false
         set1.valueFont = .systemFont(ofSize: 9)
         set1.valueColors = [UIColor.white]
+		set1.valueOffset = CGPoint(x: 0, y: 25)
 //        set1.formLineDashLengths = [5, 2.5]
 //        set1.formLineWidth = 1
         set1.formSize = 15

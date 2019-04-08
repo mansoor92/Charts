@@ -502,7 +502,7 @@ open class LineChartRenderer: LineRadarRenderer
                     }
                     
                     if dataSet.isDrawValuesEnabled {
-						let valueOffsetFromIcon = CGPoint(x: 0, y: 25)
+						let valueOffsetFromIcon = dataSet.valueOffset
                         ChartUtils.drawText(
                             context: context,
                             text: formatter.stringForValue(

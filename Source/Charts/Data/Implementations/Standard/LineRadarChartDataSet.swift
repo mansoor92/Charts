@@ -59,6 +59,9 @@ open class LineRadarChartDataSet: LineScatterCandleRadarChartDataSet, ILineRadar
 	/// **default**: 0.33
 	open var highlightFillAlpha: CGFloat = 1.0
 
+	/// The offset that is used for value,
+	/// **default**: 0,0
+	open var valueOffset: CGPoint = CGPoint(x: 0, y: 0)
     /// line width of the chart (min = 0.0, max = 10)
     ///
     /// **default**: 1
