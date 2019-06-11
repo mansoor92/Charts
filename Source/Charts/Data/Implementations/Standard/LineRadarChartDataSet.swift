@@ -55,6 +55,10 @@ open class LineRadarChartDataSet: LineScatterCandleRadarChartDataSet, ILineRadar
 	/// **default**: nil
 	open var highlightFill: Fill?
 
+	/// The object that is used for determining the size of higlighted area around point selected.
+	/// **default**: nil
+	open var highlightSize: CGSize = CGSize(width: 50, height: 50)
+
 	/// The alpha value that is used for filling the area around point selected,
 	/// **default**: 0.33
 	open var highlightFillAlpha: CGFloat = 1.0

@@ -46,6 +46,7 @@ class LineChart1ViewController: DemoBaseViewController {
         chartView.dragEnabled = true
         chartView.setScaleEnabled(true)
         chartView.pinchZoomEnabled = true
+		chartView.zoom(scaleX: 2.5, scaleY: 0.2, x: 0, y: 0)
         
         // x-axis limit line
         let llXAxis = ChartLimitLine(limit: 10, label: "Index 10")
@@ -136,15 +137,17 @@ class LineChart1ViewController: DemoBaseViewController {
         
         let gradientColors = [UIColor.clear.cgColor,
                               UIColor.white.withAlphaComponent(0.5).cgColor]
-//        let gradientColors = [UIColor.white.withAlphaComponent(0.5).cgColor,
-//                              UIColor.clear.cgColor]
         let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
+		set1.fillAlpha = 1
+		set1.fill = Fill(linearGradient: gradient, angle: 90) //.linearGradient(gradient, angle: 90)
+		set1.drawFilledEnabled = true
 
 
 		let higlightColors = [ UIColor.white.cgColor, UIColor.clear.cgColor]
 		let highlightGradient = CGGradient(colorsSpace: nil, colors: higlightColors as CFArray, locations: nil)!
 		set1.highlightFillAlpha = 0.15
 		set1.highlightFill = Fill(linearGradient: highlightGradient, angle: 90)
+		set1.highlightSize = CGSize(width: 90, height: 100)
 
 		if let patternImg = UIImage(named: "lineChartBg") {
 
@@ -153,9 +156,7 @@ class LineChart1ViewController: DemoBaseViewController {
 			set1.secondaryFillAlpha = 1
 		}
 
-        set1.fillAlpha = 1
-        set1.fill = Fill(linearGradient: gradient, angle: 90) //.linearGradient(gradient, angle: 90)
-        set1.drawFilledEnabled = true
+
         
         let data = LineChartData(dataSet: set1)
         

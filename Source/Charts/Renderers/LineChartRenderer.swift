@@ -732,7 +732,7 @@ open class LineChartRenderer: LineRadarRenderer
 
 			//Custom Highlight
 			if let highlightFill = set.highlightFill {
-				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha)
+				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha, fillSize: set.highlightSize)
 			}
 			//default highlight
 			else {
@@ -745,16 +745,18 @@ open class LineChartRenderer: LineRadarRenderer
         context.restoreGState()
     }
 
-	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat) {
+	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat, fillSize: CGSize) {
 
 		let pt = point
 
 		let filled = CGMutablePath()
-		filled.move(to: CGPoint(x: pt.x - 20, y: viewPortHandler.contentTop))
-		filled.addLine(to: CGPoint(x: pt.x-20, y: viewPortHandler.contentBottom))
-		filled.addLine(to: CGPoint(x: pt.x+20, y: viewPortHandler.contentBottom))
-		filled.addLine(to: CGPoint(x: pt.x+20, y: viewPortHandler.contentTop))
-		filled.addLine(to: CGPoint(x: pt.x-20, y: viewPortHandler.contentTop))
+		let highlightWidth: CGFloat = fillSize.width
+		let highlightHeight: CGFloat = fillSize.height
+		filled.move(to: CGPoint(x: pt.x - highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
+		filled.addLine(to: CGPoint(x: pt.x-highlightWidth, y: viewPortHandler.contentBottom+highlightHeight))
+		filled.addLine(to: CGPoint(x: pt.x+highlightWidth, y: viewPortHandler.contentBottom+highlightHeight))
+		filled.addLine(to: CGPoint(x: pt.x+highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
+		filled.addLine(to: CGPoint(x: pt.x-highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
 		filled.closeSubpath()
 
 		drawFilledPath(context: context, path: filled, fill: fill, fillAlpha: fillAlpha)

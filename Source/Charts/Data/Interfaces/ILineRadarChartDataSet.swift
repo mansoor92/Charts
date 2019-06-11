@@ -38,6 +38,7 @@ public protocol ILineRadarChartDataSet: ILineScatterCandleRadarChartDataSet
 	/// **default**: nil
 	var highlightFill: Fill? { get set }
 	var highlightFillAlpha: CGFloat { get set }
+	var highlightSize: CGSize { get set }
 
 	/// - Returns: The object that is used for value offset.
 	/// - Removes detfault highlight

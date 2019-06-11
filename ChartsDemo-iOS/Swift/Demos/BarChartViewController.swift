@@ -36,17 +36,31 @@ class BarChartViewController: DemoBaseViewController {
         self.setup(barLineChartView: chartView)
         
         chartView.delegate = self
+		chartView.rightAxis.enabled = false
         
         chartView.drawBarShadowEnabled = false
         chartView.drawValueAboveBarEnabled = false
-        
+
         chartView.maxVisibleCount = 60
+
+		//Custom
+		chartView.chartDescription?.enabled = false
+		chartView.dragEnabled = true
+		chartView.setScaleEnabled(true)
+		chartView.pinchZoomEnabled = true
+		chartView.rightAxis.enabled = false
+
+
+		chartView.animate(xAxisDuration: 2.5)
+		chartView.leftAxis.enabled = false // disable horizontal lines of grid behind graph
+		chartView.xAxis.enabled = false // disable verticle line of grid behind graph
+
         
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
         xAxis.labelFont = .systemFont(ofSize: 10)
         xAxis.granularity = 1
-        xAxis.labelCount = 7
+        xAxis.labelCount = 0
         xAxis.valueFormatter = DayAxisValueFormatter(chart: chartView)
         
         let leftAxisFormatter = NumberFormatter()
@@ -57,12 +71,15 @@ class BarChartViewController: DemoBaseViewController {
         
         let leftAxis = chartView.leftAxis
         leftAxis.labelFont = .systemFont(ofSize: 10)
-        leftAxis.labelCount = 8
+        leftAxis.labelCount = 0
         leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: leftAxisFormatter)
         leftAxis.labelPosition = .outsideChart
         leftAxis.spaceTop = 0.15
         leftAxis.axisMinimum = 0 // FIXME: HUH?? this replaces startAtZero = YES
-        
+
+//		chartView.rightAxis.drawZeroLineEnabled = false
+//		chartView.rightAxis.drawTopYLabelEntryEnabled = false
+//		chartView.rightAxis.drawBottomYLabelEntryEnabled = false
         let rightAxis = chartView.rightAxis
         rightAxis.enabled = true
         rightAxis.labelFont = .systemFont(ofSize: 10)
@@ -70,8 +87,10 @@ class BarChartViewController: DemoBaseViewController {
         rightAxis.valueFormatter = leftAxis.valueFormatter
         rightAxis.spaceTop = 0.15
         rightAxis.axisMinimum = 0
-        
+
+//		chartView.drawValueAboveBarEnabled = false
         let l = chartView.legend
+		l.enabled = false
         l.horizontalAlignment = .left
         l.verticalAlignment = .bottom
         l.orientation = .horizontal
@@ -82,6 +101,7 @@ class BarChartViewController: DemoBaseViewController {
         l.xEntrySpace = 4
 //        chartView.legend = l
 
+		/*
         let marker = XYMarkerView(color: UIColor(white: 180/250, alpha: 1),
                                   font: .systemFont(ofSize: 12),
                                   textColor: .white,
@@ -90,7 +110,8 @@ class BarChartViewController: DemoBaseViewController {
         marker.chartView = chartView
         marker.minimumSize = CGSize(width: 80, height: 40)
         chartView.marker = marker
-        
+		*/
+
         sliderX.value = 12
         sliderY.value = 50
         slidersValueChanged(nil)
