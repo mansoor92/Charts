@@ -37,8 +37,11 @@
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqd-Ej-1xl" customClass="LineChartView" customModule="Charts">
-                    <rect key="frame" x="0.0" y="47" width="375" height="501"/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <rect key="frame" x="0.0" y="398" width="375" height="150"/>
+                    <color key="backgroundColor" red="1" green="0.27872206799999999" blue="0.3087875457" alpha="0.18621845421640376" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="150" id="kOa-qQ-XB0"/>
+                    </constraints>
                 </view>
                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="1500" translatesAutoresizingMaskIntoConstraints="NO" id="Xhn-cI-Tqm">
                     <rect key="frame" x="6" y="573" width="285" height="31"/>
@@ -73,7 +76,6 @@
             </subviews>
             <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="Oqd-Ej-1xl" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="47" id="3NA-if-rAO"/>
                 <constraint firstItem="IuK-nU-ZPT" firstAttribute="leading" secondItem="TE7-or-dqL" secondAttribute="leading" constant="8" id="66R-JE-JSc"/>
                 <constraint firstItem="Oqd-Ej-1xl" firstAttribute="leading" secondItem="TE7-or-dqL" secondAttribute="leading" id="6Mc-iO-BuY"/>
                 <constraint firstItem="IuK-nU-ZPT" firstAttribute="top" secondItem="Xhn-cI-Tqm" secondAttribute="bottom" constant="8" id="Aa8-g3-hZn"/>

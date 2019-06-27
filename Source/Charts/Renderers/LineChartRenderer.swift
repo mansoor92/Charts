@@ -732,7 +732,7 @@ open class LineChartRenderer: LineRadarRenderer
 
 			//Custom Highlight
 			if let highlightFill = set.highlightFill {
-				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha, fillSize: set.highlightSize)
+				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha, fillSize: set.highlightSize, icon: set.highlightPointImage,footImage: set.highlightFootImage)
 			}
 			//default highlight
 			else {
@@ -745,21 +745,38 @@ open class LineChartRenderer: LineRadarRenderer
         context.restoreGState()
     }
 
-	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat, fillSize: CGSize) {
+	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat, fillSize: CGSize, icon: UIImage?, footImage: UIImage?) {
 
 		let pt = point
 
 		let filled = CGMutablePath()
 		let highlightWidth: CGFloat = fillSize.width
-		let highlightHeight: CGFloat = fillSize.height
-		filled.move(to: CGPoint(x: pt.x - highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
-		filled.addLine(to: CGPoint(x: pt.x-highlightWidth, y: viewPortHandler.contentBottom+highlightHeight))
-		filled.addLine(to: CGPoint(x: pt.x+highlightWidth, y: viewPortHandler.contentBottom+highlightHeight))
-		filled.addLine(to: CGPoint(x: pt.x+highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
-		filled.addLine(to: CGPoint(x: pt.x-highlightWidth, y: viewPortHandler.contentTop+highlightHeight))
+//		let highlightHeight: CGFloat = 1000
+		let halfWidth = highlightWidth/2
+		filled.move(to: CGPoint(x: pt.x - halfWidth, y: viewPortHandler.contentTop))
+		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: viewPortHandler.contentBottom))
+		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: viewPortHandler.contentBottom))
+		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: viewPortHandler.contentTop))
+		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: viewPortHandler.contentTop))
 		filled.closeSubpath()
 
 		drawFilledPath(context: context, path: filled, fill: fill, fillAlpha: fillAlpha)
+
+		if let img = icon {
+			ChartUtils.drawImage(context: context,
+								 image: img,
+								 x: pt.x,
+								 y: pt.y,
+								 size: img.size)
+		}
+		if let img = footImage {
+			ChartUtils.drawImage(context: context,
+								 image: img,
+								 x: pt.x,
+								 y: viewPortHandler.contentBottom,
+								 size: CGSize(width: highlightWidth, height: img.size.height))
+		}
+
 	}
 
 

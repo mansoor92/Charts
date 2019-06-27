@@ -62,6 +62,8 @@ open class LineRadarChartDataSet: LineScatterCandleRadarChartDataSet, ILineRadar
 	/// The alpha value that is used for filling the area around point selected,
 	/// **default**: 0.33
 	open var highlightFillAlpha: CGFloat = 1.0
+	open var highlightPointImage: UIImage? = nil
+	open var highlightFootImage: UIImage? = nil
 
 	/// The offset that is used for value,
 	/// **default**: 0,0

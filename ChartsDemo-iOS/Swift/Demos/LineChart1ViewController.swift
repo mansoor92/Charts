@@ -41,7 +41,11 @@ class LineChart1ViewController: DemoBaseViewController {
                         .toggleData]
         
         chartView.delegate = self
-        
+
+		chartView.layer.masksToBounds = false
+		chartView.layer.borderWidth = 1
+		chartView.layer.borderColor = UIColor.red.cgColor
+		
         chartView.chartDescription?.enabled = false
         chartView.dragEnabled = true
         chartView.setScaleEnabled(true)
@@ -143,11 +147,13 @@ class LineChart1ViewController: DemoBaseViewController {
 		set1.drawFilledEnabled = true
 
 
-		let higlightColors = [ UIColor.white.cgColor, UIColor.clear.cgColor]
+		let higlightColors = [ UIColor.white.cgColor,UIColor.white.withAlphaComponent(0.5).cgColor, UIColor.white.withAlphaComponent(0.2).cgColor, UIColor.clear.cgColor]
 		let highlightGradient = CGGradient(colorsSpace: nil, colors: higlightColors as CFArray, locations: nil)!
-		set1.highlightFillAlpha = 0.15
+		set1.highlightFillAlpha = 0.3
 		set1.highlightFill = Fill(linearGradient: highlightGradient, angle: 90)
 		set1.highlightSize = CGSize(width: 90, height: 100)
+		set1.highlightPointImage = UIImage(named: "point")
+		set1.highlightFootImage = UIImage(named: "Line")
 
 		if let patternImg = UIImage(named: "lineChartBg") {
 
