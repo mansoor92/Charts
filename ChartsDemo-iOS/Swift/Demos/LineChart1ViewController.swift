@@ -154,7 +154,6 @@ class LineChart1ViewController: DemoBaseViewController {
 
 		setDataCount(values: dummyData())
 
-
 	}
 
 

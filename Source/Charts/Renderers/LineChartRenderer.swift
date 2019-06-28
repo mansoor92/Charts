@@ -771,7 +771,7 @@ open class LineChartRenderer: LineRadarRenderer
 			ChartUtils.drawImage(context: context,
 								 image: img,
 								 x: pt.x,
-								 y: viewPortHandler.chartHeight-img.size.height,
+								 y: viewPortHandler.chartHeight,
 								 size: CGSize(width: fillWidth, height: img.size.height))
 		}
 
