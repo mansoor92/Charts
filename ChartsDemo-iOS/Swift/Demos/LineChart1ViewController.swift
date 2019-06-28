@@ -24,6 +24,7 @@ class LineChart1ViewController: DemoBaseViewController {
 
 		// Do any additional setup after loading the view.
         self.title = "Line Chart 1"
+		configureChart()
         self.options = [.toggleValues,
                         .toggleFilled,
                         .toggleCircles,
@@ -39,7 +40,9 @@ class LineChart1ViewController: DemoBaseViewController {
                         .togglePinchZoom,
                         .toggleAutoScaleMinMax,
                         .toggleData]
-        
+
+		chartView.clipsToBounds = false
+        /*
         chartView.delegate = self
 
 		chartView.layer.masksToBounds = false
@@ -97,6 +100,7 @@ class LineChart1ViewController: DemoBaseViewController {
         chartView.marker = marker
         
         chartView.legend.form = .line
+		chartView.zoom(scaleX: 2.5, scaleY: 0.2, x: 0, y: 0)
         
         sliderX.value = 45
         sliderY.value = 100
@@ -104,7 +108,7 @@ class LineChart1ViewController: DemoBaseViewController {
         
         chartView.animate(xAxisDuration: 2.5)
 		chartView.leftAxis.enabled = false // disable horizontal lines of grid behind graph
-		chartView.xAxis.enabled = false // disable verticle line of grid behind graph
+		chartView.xAxis.enabled = false // disable verticle line of grid behind graph*/
     }
 
     override func updateChartData() {
@@ -113,15 +117,57 @@ class LineChart1ViewController: DemoBaseViewController {
             return
         }
         
-        self.setDataCount(Int(sliderX.value), range: UInt32(sliderY.value))
+		self.setDataCount(values: dummyData())
     }
 
-    func setDataCount(_ count: Int, range: UInt32) {
-        let values = (0..<count).map { (i) -> ChartDataEntry in
-            let val = Double(arc4random_uniform(range) + 3)
-            return ChartDataEntry(x: Double(i), y: val, icon: #imageLiteral(resourceName: "icon"))
-        }
-        
+
+	private func configureChart() {
+		chartView.delegate = self
+
+		chartView.chartDescription?.enabled = false
+		chartView.dragEnabled = true
+		chartView.pinchZoomEnabled = false
+		chartView.rightAxis.enabled = false
+
+		chartView.legend.form = .line
+		chartView.zoom(scaleX: 2.5, scaleY: 0.2, x: 0, y: 0)
+		//		chartView.scaleY = 0.2
+		chartView.setScaleEnabled(false)
+		chartView.leftAxis.axisMinimum = 0
+		chartView.leftAxis.axisMaximum = 10
+
+		chartView.animate(xAxisDuration: 2.5)
+		chartView.leftAxis.enabled = false // disable horizontal lines of grid behind graph
+		chartView.xAxis.enabled = true // disable verticle line of grid behind graph
+		chartView.xAxis.axisLineColor = .clear
+		chartView.xAxis.gridColor = .clear
+		chartView.xAxis.labelTextColor = UIColor.white
+		chartView.xAxis.labelPosition = .bottom
+//		chartView.xAxis.labelFont =
+
+
+		chartView.clipDataToContentEnabled = false
+
+		chartView.layer.masksToBounds = false
+		chartView.layer.borderWidth = 1
+		chartView.layer.borderColor = UIColor.red.cgColor
+
+		setDataCount(values: dummyData())
+
+
+	}
+
+
+	func dummyData() -> [ChartDataEntry] {
+		let values = (1997..<2050).map { (i) -> ChartDataEntry in
+			let val = Double(arc4random_uniform(5) + 3)
+			return ChartDataEntry(x: Double(i), y: val, icon: UIImage())
+		}
+		return values
+	}
+
+    func setDataCount(values: [ChartDataEntry]) {
+
         let set1 = LineChartDataSet(entries: values, label: "DataSet 1")
         set1.drawIconsEnabled = false
         
@@ -147,11 +193,11 @@ class LineChart1ViewController: DemoBaseViewController {
 		set1.drawFilledEnabled = true
 
 
-		let higlightColors = [ UIColor.white.cgColor,UIColor.white.withAlphaComponent(0.5).cgColor, UIColor.white.withAlphaComponent(0.2).cgColor, UIColor.clear.cgColor]
+		let higlightColors = [ UIColor.white.cgColor,UIColor.red.withAlphaComponent(0.5).cgColor]
 		let highlightGradient = CGGradient(colorsSpace: nil, colors: higlightColors as CFArray, locations: nil)!
-		set1.highlightFillAlpha = 0.3
+		set1.highlightFillAlpha = 0.5
 		set1.highlightFill = Fill(linearGradient: highlightGradient, angle: 90)
-		set1.highlightSize = CGSize(width: 90, height: 100)
+		set1.highlightWidth = 90
 		set1.highlightPointImage = UIImage(named: "point")
 		set1.highlightFootImage = UIImage(named: "Line")
 

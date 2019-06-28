@@ -38,7 +38,7 @@ public protocol ILineRadarChartDataSet: ILineScatterCandleRadarChartDataSet
 	/// **default**: nil
 	var highlightFill: Fill? { get set }
 	var highlightFillAlpha: CGFloat { get set }
-	var highlightSize: CGSize { get set }
+	var highlightWidth: CGFloat { get set }
 	var highlightPointImage: UIImage? { get set }
 	var highlightFootImage: UIImage? { get set }
 

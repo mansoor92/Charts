@@ -732,7 +732,7 @@ open class LineChartRenderer: LineRadarRenderer
 
 			//Custom Highlight
 			if let highlightFill = set.highlightFill {
-				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha, fillSize: set.highlightSize, icon: set.highlightPointImage,footImage: set.highlightFootImage)
+				drawHighlightCustomFill(context: context, point: pt, fill: highlightFill, fillAlpha: set.highlightFillAlpha, fillWidth: set.highlightWidth, icon: set.highlightPointImage,footImage: set.highlightFootImage)
 			}
 			//default highlight
 			else {
@@ -745,19 +745,17 @@ open class LineChartRenderer: LineRadarRenderer
         context.restoreGState()
     }
 
-	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat, fillSize: CGSize, icon: UIImage?, footImage: UIImage?) {
+	private func drawHighlightCustomFill(context: CGContext, point: CGPoint, fill: Fill, fillAlpha: CGFloat, fillWidth: CGFloat, icon: UIImage?, footImage: UIImage?) {
 
 		let pt = point
 
 		let filled = CGMutablePath()
-		let highlightWidth: CGFloat = fillSize.width
-//		let highlightHeight: CGFloat = 1000
-		let halfWidth = highlightWidth/2
-		filled.move(to: CGPoint(x: pt.x - halfWidth, y: viewPortHandler.contentTop))
-		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: viewPortHandler.contentBottom))
-		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: viewPortHandler.contentBottom))
-		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: viewPortHandler.contentTop))
-		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: viewPortHandler.contentTop))
+		let halfWidth = fillWidth/2
+		filled.move(to: CGPoint(x: pt.x - halfWidth, y: 0))
+		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: viewPortHandler.chartHeight))
+		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: viewPortHandler.chartHeight))
+		filled.addLine(to: CGPoint(x: pt.x+halfWidth, y: 0))
+		filled.addLine(to: CGPoint(x: pt.x-halfWidth, y: 0))
 		filled.closeSubpath()
 
 		drawFilledPath(context: context, path: filled, fill: fill, fillAlpha: fillAlpha)
@@ -773,8 +771,8 @@ open class LineChartRenderer: LineRadarRenderer
 			ChartUtils.drawImage(context: context,
 								 image: img,
 								 x: pt.x,
-								 y: viewPortHandler.contentBottom,
-								 size: CGSize(width: highlightWidth, height: img.size.height))
+								 y: viewPortHandler.chartHeight-img.size.height,
+								 size: CGSize(width: fillWidth, height: img.size.height))
 		}
 
 	}
