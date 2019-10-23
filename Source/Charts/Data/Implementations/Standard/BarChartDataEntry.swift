@@ -13,6 +13,16 @@ import Foundation
 
 open class BarChartDataEntry: ChartDataEntry
 {
+
+	public struct SpecialEntry {
+		public var borderColor: UIColor = .white
+		public var enableHighlight = false
+
+		public init(fillColor: UIColor, enableHighlight: Bool) {
+			self.borderColor = fillColor
+			self.enableHighlight = enableHighlight
+		}
+	}
     /// the values the stacked barchart holds
     private var _yVals: [Double]?
     
@@ -24,7 +34,9 @@ open class BarChartDataEntry: ChartDataEntry
     
     /// the sum of all positive values this entry (if stacked) contains
     private var _positiveSum: Double = 0.0
-    
+
+	public var specialEntry: SpecialEntry?
+
     public required init()
     {
         super.init()

@@ -15,6 +15,8 @@ import CoreGraphics
 
 open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDataSet
 {
+
+
     private func initialize()
     {
         self.highlightColor = NSUIColor.black
@@ -148,6 +150,18 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDat
 
     /// the alpha value (transparency) that is used for drawing the highlight indicator bar. min = 0.0 (fully transparent), max = 1.0 (fully opaque)
     open var highlightAlpha = CGFloat(120.0 / 255.0)
+
+	///bar corner radius
+	public var cornerRadius: CGFloat = 0
+	/// set corners to round
+	///if true  cornerRadius is ignored
+	public var isRoundCorners: Bool = false
+
+	/// Draw values at below bar
+	public var isDrawValuesAtBottom: Bool = false
+
+	///bar rounding corners
+	open var roundingCorners: UIRectCorner = .allCorners
     
     // MARK: - NSCopying
     

@@ -116,8 +116,25 @@ class LineChart1ViewController: DemoBaseViewController {
             chartView.data = nil
             return
         }
-        
-		self.setDataCount(values: dummyData())
+
+
+		let set1 = dataSet(values: dummyData(from: 1997, to: 2016))
+		let set2 = dataSet(values: dummyData(from: 2000, to: 2016))
+
+		let data = LineChartData(dataSets: [set1, set2])
+		//		data.setValueTextColor(.white)
+		//		data.setValueFont(.systemFont(ofSize: 9))
+
+		chartView.data = data
+
+		let marker:BalloonMarker = BalloonMarker(color: UIColor.black, font: UIFont(name: "Helvetica", size: 12)!, textColor: UIColor.white, insets: UIEdgeInsets(top: 7.0, left: 7.0, bottom: 7.0, right: 7.0))
+		marker.minimumSize = CGSize(width: 75.0, height: 35.0)
+		chartView.marker = marker
+		chartView.drawMarkers = true
+		chartView.data?.highlightEnabled = true
+
+//		chartView.marker?.offsetForDrawing(atPoint: <#T##CGPoint#>)
+//		chartView.highlightValues([Highlight])
     }
 
 
@@ -129,18 +146,20 @@ class LineChart1ViewController: DemoBaseViewController {
 		chartView.pinchZoomEnabled = false
 		chartView.rightAxis.enabled = false
 
-		chartView.legend.form = .line
+		chartView.legend.form = .square
 		chartView.zoom(scaleX: 2.5, scaleY: 0.2, x: 0, y: 0)
 		//		chartView.scaleY = 0.2
 		chartView.setScaleEnabled(false)
 		chartView.leftAxis.axisMinimum = 0
 		chartView.leftAxis.axisMaximum = 10
+		chartView.leftAxis.labelTextColor = .white
 
 		chartView.animate(xAxisDuration: 2.5)
-		chartView.leftAxis.enabled = false // disable horizontal lines of grid behind graph
+		chartView.leftAxis.enabled = true // disable horizontal lines of grid behind graph
 		chartView.xAxis.enabled = true // disable verticle line of grid behind graph
 		chartView.xAxis.axisLineColor = .clear
-		chartView.xAxis.gridColor = .clear
+//		chartView.xAxis.gridColor = .clear
+//		chartView.y
 		chartView.xAxis.labelTextColor = UIColor.white
 		chartView.xAxis.labelPosition = .bottom
 //		chartView.xAxis.labelFont =
@@ -152,20 +171,26 @@ class LineChart1ViewController: DemoBaseViewController {
 		chartView.layer.borderWidth = 1
 		chartView.layer.borderColor = UIColor.red.cgColor
 
-		setDataCount(values: dummyData())
+		let set1 = dataSet(values: dummyData(from: 1997, to: 2016))
+		let set2 = dataSet(values: dummyData(from: 2000, to: 2016))
+		let data = LineChartData(dataSets: [set1, set2])
+//		data.setValueTextColor(.white)
+//		data.setValueFont(.systemFont(ofSize: 9))
+		chartView.legend.enabled = false
+		chartView.data = data
 
 	}
 
 
-	func dummyData() -> [ChartDataEntry] {
-		let values = (1997..<2050).map { (i) -> ChartDataEntry in
+	func dummyData(from: Int, to: Int) -> [ChartDataEntry] {
+		let values = (from..<to).map { (i) -> ChartDataEntry in
 			let val = Double(arc4random_uniform(5) + 3)
 			return ChartDataEntry(x: Double(i), y: val, icon: UIImage())
 		}
 		return values
 	}
 
-    func setDataCount(values: [ChartDataEntry]) {
+    func dataSet(values: [ChartDataEntry]) -> ILineRadarChartDataSet{
 
         let set1 = LineChartDataSet(entries: values, label: "DataSet 1")
         set1.drawIconsEnabled = false
@@ -173,23 +198,24 @@ class LineChart1ViewController: DemoBaseViewController {
 //        set1.lineDashLengths = [5, 2.5]
 //        set1.highlightLineDashLengths = [5, 2.5]
         set1.setColor(.white)
-        set1.setCircleColor(.white)
-//        set1.lineWidth = 1
-        set1.circleRadius = 3
-//        set1.drawCircleHoleEnabled = false
+        set1.setCircleColor(.clear)
+        set1.lineWidth = 3
+        set1.circleRadius = 0
+        set1.drawCircleHoleEnabled = true
         set1.valueFont = .systemFont(ofSize: 9)
         set1.valueColors = [UIColor.white]
 		set1.valueOffset = CGPoint(x: 0, y: 25)
+//		set1.drawIconsEnabled = false
 //        set1.formLineDashLengths = [5, 2.5]
 //        set1.formLineWidth = 1
         set1.formSize = 15
         
-        let gradientColors = [UIColor.clear.cgColor,
-                              UIColor.white.withAlphaComponent(0.5).cgColor]
-        let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
-		set1.fillAlpha = 1
-		set1.fill = Fill(linearGradient: gradient, angle: 90) //.linearGradient(gradient, angle: 90)
-		set1.drawFilledEnabled = true
+//        let gradientColors = [UIColor.clear.cgColor,
+//                              UIColor.white.withAlphaComponent(0.5).cgColor]
+//        let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
+//		set1.fillAlpha = 1
+//		set1.fill = Fill(linearGradient: gradient, angle: 90) //.linearGradient(gradient, angle: 90)
+//		set1.drawFilledEnabled = true
 
 
 		let higlightColors = [ UIColor.white.cgColor,UIColor.red.withAlphaComponent(0.5).cgColor]
@@ -207,11 +233,7 @@ class LineChart1ViewController: DemoBaseViewController {
 			set1.secondaryFillAlpha = 1
 		}
 
-
-        
-        let data = LineChartData(dataSet: set1)
-        
-        chartView.data = data
+		return set1
     }
     
     override func optionTapped(_ option: Option) {

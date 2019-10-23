@@ -533,8 +533,14 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             if !isHighLightPerTapEnabled { return }
             
             let h = getHighlightByTouchPoint(recognizer.location(in: self))
-            
-            if h === nil || h == self.lastHighlighted
+
+			if let newH = h, let barData = data as? BarChartData {
+				let set = barData.getDataSetByIndex(newH.dataSetIndex) as? IBarChartDataSet
+				let e = set?.entryForXValue(newH.x, closestToY: newH.y) as? BarChartDataEntry
+				if !(e?.specialEntry?.enableHighlight ?? true) { return }
+			}
+
+			if h === nil || h == self.lastHighlighted
             {
                 lastHighlighted = nil
                 highlightValue(nil, callDelegate: true)

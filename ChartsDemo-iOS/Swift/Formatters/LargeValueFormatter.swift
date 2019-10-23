@@ -53,6 +53,6 @@ public class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFormatter
         entry: ChartDataEntry,
         dataSetIndex: Int,
         viewPortHandler: ViewPortHandler?) -> String {
-        return format(value: value)
+		return format(value: value) + "\n\n" + entry.category
     }
 }

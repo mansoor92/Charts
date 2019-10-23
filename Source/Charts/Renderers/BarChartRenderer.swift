@@ -12,6 +12,13 @@
 import Foundation
 import CoreGraphics
 
+extension CGRect {
+	func roundedPath(cornerRadius: CGFloat, roundingCorners: UIRectCorner) -> CGPath {
+		let bezierPath = UIBezierPath(roundedRect: self, byRoundingCorners: roundingCorners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+		return bezierPath.cgPath
+	}
+}
+
 open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 {
     /// A nested array of elements ordered logically (i.e not in visual/drawing order) for use with VoiceOver
@@ -338,7 +345,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             let barWidth = barData.barWidth
             let barWidthHalf = barWidth / 2.0
             var x: Double = 0.0
-            
+
             for i in stride(from: 0, to: min(Int(ceil(Double(dataSet.entryCount) * animator.phaseX)), dataSet.entryCount), by: 1)
             {
                 guard let e = dataSet.entryForIndex(i) as? BarChartDataEntry else { continue }
@@ -362,7 +369,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 _barShadowRectBuffer.origin.y = viewPortHandler.contentTop
                 _barShadowRectBuffer.size.height = viewPortHandler.contentHeight
-                
+
                 context.setFillColor(dataSet.barShadowColor.cgColor)
                 context.fill(_barShadowRectBuffer)
             }
@@ -386,9 +393,18 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 {
                     break
                 }
-                
+
+				let cornerRadius: CGFloat
+				if dataSet.isRoundCorners {
+					cornerRadius = barRect.width / 2
+				}else {
+					cornerRadius = dataSet.cornerRadius
+				}
+				let roundedPath = barRect.roundedPath(cornerRadius: cornerRadius, roundingCorners: dataSet.roundingCorners)
                 context.setFillColor(dataSet.barShadowColor.cgColor)
-                context.fill(barRect)
+//                context.fill(barRect)
+                context.addPath(roundedPath)
+                context.fillPath()
             }
         }
         
@@ -416,20 +432,42 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             {
                 break
             }
-            
-            if !isSingleColor
-            {
-                // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
-                context.setFillColor(dataSet.color(atIndex: j).cgColor)
-            }
-            
-            context.fill(barRect)
+
+			if !isSingleColor
+			{
+				// Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
+				context.setFillColor(dataSet.color(atIndex: j).cgColor)
+			}
+			/*
+			else if let pt = dataSet.entryForIndex(j) as? BarChartDataEntry, let color = pt.specialEntry?.fillColor {
+				context.setFillColor(color.cgColor)
+			}else {
+				context.setFillColor(dataSet.color(atIndex: 0).cgColor)
+			}
+			*/
+
+			let cornerRadius: CGFloat
+			if dataSet.isRoundCorners {
+				cornerRadius = barRect.width / 2
+			}else {
+				cornerRadius = dataSet.cornerRadius
+			}
+			let roundedPath = barRect.roundedPath(cornerRadius: cornerRadius, roundingCorners: dataSet.roundingCorners)
+			context.addPath(roundedPath)
+			context.fillPath()
+			//            context.fill(barRect)
             
             if drawBorder
             {
-                context.setStrokeColor(borderColor.cgColor)
+				if let pt = dataSet.entryForIndex(j) as? BarChartDataEntry, let color = pt.specialEntry?.borderColor {
+					context.setStrokeColor(color.cgColor)
+				}else {
+					context.setStrokeColor(borderColor.cgColor)
+				}
                 context.setLineWidth(borderWidth)
-                context.stroke(barRect)
+				context.addPath(roundedPath)
+				context.strokePath()
+//                context.stroke(barRect)
             }
 
             // Create and append the corresponding accessibility element to accessibilityOrderedElements
@@ -545,9 +583,20 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                         }
                         
                         let val = e.y
-                        
+
+
+
                         if dataSet.isDrawValuesEnabled
                         {
+							let yPos: CGFloat
+							if dataSet.isDrawValuesAtBottom && val >= 0.0 {
+								yPos = rect.origin.y + rect.size.height - posOffset
+							}else {
+								yPos = val >= 0.0
+									? (rect.origin.y + posOffset)
+									: (rect.origin.y + rect.size.height + negOffset)
+							}
+
                             drawValue(
                                 context: context,
                                 value: formatter.stringForValue(
@@ -556,14 +605,12 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                                     dataSetIndex: dataSetIndex,
                                     viewPortHandler: viewPortHandler),
                                 xPos: x,
-                                yPos: val >= 0.0
-                                    ? (rect.origin.y + posOffset)
-                                    : (rect.origin.y + rect.size.height + negOffset),
+                                yPos: yPos,
                                 font: valueFont,
                                 align: .center,
                                 color: dataSet.valueTextColorAt(j))
                         }
-                        
+
                         if let icon = e.icon, dataSet.isDrawIconsEnabled
                         {
                             var px = x
@@ -765,10 +812,16 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             
             if let e = set.entryForXValue(high.x, closestToY: high.y) as? BarChartDataEntry
             {
+
                 if !isInBoundsX(entry: e, dataSet: set)
                 {
                     continue
                 }
+
+				//check for special entry
+				if  !(e.specialEntry?.enableHighlight ?? true) {
+					continue
+				}
                 
                 let trans = dataProvider.getTransformer(forAxis: set.axisDependency)
                 
@@ -804,8 +857,17 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 prepareBarHighlight(x: e.x, y1: y1, y2: y2, barWidthHalf: barData.barWidth / 2.0, trans: trans, rect: &barRect)
                 
                 setHighlightDrawPos(highlight: high, barRect: barRect)
-                
-                context.fill(barRect)
+
+				let cornerRadius: CGFloat
+				if set.isRoundCorners {
+					cornerRadius = barRect.width / 2
+				}else {
+					cornerRadius = set.cornerRadius
+				}
+				let roundedPath = barRect.roundedPath(cornerRadius: cornerRadius, roundingCorners: set.roundingCorners)
+//                context.fill(barRect)
+				context.addPath(roundedPath)
+                context.fillPath()
             }
         }
         

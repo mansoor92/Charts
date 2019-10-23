@@ -15,6 +15,8 @@ open class ChartDataEntry: ChartDataEntryBase, NSCopying
 {
     /// the x value
     @objc open var x = Double(0.0)
+
+	public var category: String = ""
     
     public required init()
     {

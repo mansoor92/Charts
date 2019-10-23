@@ -70,7 +70,9 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
         guard let h = self.highlighter?.getHighlight(x: pt.x, y: pt.y)
             else { return nil }
         
-        if !isHighlightFullBarEnabled { return h }
+        if !isHighlightFullBarEnabled {
+			return h
+		}
         
         // For isHighlightFullBarEnabled, remove stackIndex
         return Highlight(
